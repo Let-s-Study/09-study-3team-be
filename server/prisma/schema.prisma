@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/* Study */
+model Study {
+  id          String   @id @default(cuid())
+  nickname    String
+  title       String
+  description String
+  password    String
+  background  String
+  totalPoint  Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  emojis      Emoji[]
+  habits      Habit[]
+}
+
+/* Emoji */
+model Emoji {
+  id        String   @id @default(cuid())
+  emoji     String
+  count     Int      @default(0)
+  createdAt DateTime @default(now())
+
+  study   Study  @relation(fields: [studyId], references: [id])
+  studyId String
+}
+
+/* Habit */
+model Habit {
+  id         String        @id @default(cuid())
+  title      String
+  studyId    String
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+
+  study         Study         @relation(fields: [studyId], references: [id])
+  habitRecords  HabitRecord[]
+}
+
+/* HabitRecord  */
+model HabitRecord {
+  id        String   @id @default(cuid())
+  habitId   String
+  day       DateTime @default(now())
+
+  habit Habit @relation(fields: [habitId], references: [id])
+}
