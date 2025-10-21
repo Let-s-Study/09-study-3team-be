@@ -7,7 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-/* Study */
 model Study {
   id          String   @id @default(cuid())
   nickname    String
@@ -19,37 +18,35 @@ model Study {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
-  emojis      Emoji[]
-  habits      Habit[]
+  emojis Emoji[]
+  habits Habit[]
 }
 
-/* Emoji */
 model Emoji {
   id        String   @id @default(cuid())
   emoji     String
-  count     Int      @default(0)
+  count     Int      @default(1)
+  studyId   String
   createdAt DateTime @default(now())
-  studyId String
-  study   Study  @relation(fields: [studyId], references: [id])
+
+  study Study @relation(fields: [studyId], references: [id], onDelete: Cascade)
 }
 
-/* Habit */
 model Habit {
-  id         String        @id @default(cuid())
-  title      String
-  studyId    String
-  createdAt  DateTime      @default(now())
-  updatedAt  DateTime      @updatedAt
+  id        String   @id @default(cuid())
+  title     String
+  studyId   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  study         Study         @relation(fields: [studyId], references: [id])
-  habitRecords  HabitRecord[]
+  study        Study         @relation(fields: [studyId], references: [id], onDelete: Cascade)
+  habitRecords HabitRecord[]
 }
 
-/* HabitRecord  */
 model HabitRecord {
-  id        String   @id @default(cuid())
-  habitId   String
-  day       DateTime @default(now())
+  id      String   @id @default(cuid())
+  habitId String
+  day     DateTime
 
-  habit Habit @relation(fields: [habitId], references: [id])
+  habit Habit @relation(fields: [habitId], references: [id], onDelete: Cascade)
 }
