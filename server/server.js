@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import studyRoute from './src/routes/studyRoute.js';
 
 dotenv.config();
 
@@ -20,6 +21,8 @@ app.get('/api/v1/health', (req, res) => {
     },
   });
 });
+
+app.use('/api/v1/studies', studyRoute);
 
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);

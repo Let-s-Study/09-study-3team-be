@@ -29,9 +29,8 @@ model Emoji {
   emoji     String
   count     Int      @default(0)
   createdAt DateTime @default(now())
-
-  study   Study  @relation(fields: [studyId], references: [id])
   studyId String
+  study   Study  @relation(fields: [studyId], references: [id])
 }
 
 /* Habit */
