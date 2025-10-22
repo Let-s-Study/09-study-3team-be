@@ -85,8 +85,10 @@ npm run prisma:generate# Prisma Client 생성
 npm run prisma:migrate # 스키마 → DB 반영
 npm run prisma:studio  # Prisma Studio UI
 
-```
-server
+
+## 🗂 폴더 구조
+```bash
+server/
 ├─ .prettierrc
 ├─ README.md
 ├─ eslint.config.js
@@ -126,7 +128,4 @@ server
 │  └─ validators
 └─ vscode
    └─ settings.json
-
-```
-
 
