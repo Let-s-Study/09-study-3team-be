@@ -145,7 +145,12 @@ export const verifyPw = async (req, res, next) => {
     }
 
     const token = jwt.sign({ studyId: study.id }, 'YOUR_SECRET_KEY');
-    return res.status(200).json({ message: '인증 완료', token });
+    res.cookie('accessToken', token, {
+      httpOnly: true,
+      secure: true,
+      maxAge: 1000 * 60 * 60, //쿠키 유효시간(1시간)
+    });
+    return res.status(200).json({ message: '인증 완료' });
   } catch (error) {
     next(error);
   }

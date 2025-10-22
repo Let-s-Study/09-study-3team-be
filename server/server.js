@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import cookieParser from 'cookie-parser';
 
 import studyRoute from './src/routes/studyRoute.js';
 import habitRoute from './src/routes/habitRoute.js';
@@ -14,6 +15,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 
 app.get('/api/v1/health', (req, res) => {
   res.status(200).json({
