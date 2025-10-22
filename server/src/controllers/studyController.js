@@ -1,5 +1,7 @@
 import * as StudyRepo from '../repository/studyRepository.js';
 import { Prisma } from '@prisma/client';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonbtoken';
 
 export const createStudy = async (req, res) => {
   try {
@@ -127,3 +129,17 @@ export const addStudyPoints = async (req, res) => {
       });
   }
 };
+
+export const verifyPw = async (req,res,next) => {
+  try {
+    const {studyId} = req.params;
+    const {password} = req.body;
+    const isPasswordCorrect = await bcrypt.compare(password,studyId.password);
+    if(!isPasswordCorrect){
+      return res.status(401).json({message: '비밀번호가 일치하지 않습니다.'});
+    }
+    return res.status(200).json({message: '로그인 성공'});
+  } catch(error){
+    next(error);
+  }
+}

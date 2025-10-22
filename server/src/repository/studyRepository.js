@@ -21,3 +21,9 @@ export const addPoints = async (id, amount) => {
     data: { totalPoint: { increment: amount } },
   });
 };
+
+export const findStudyById = async (studyId) => {
+  return prisma.study.findUnique({
+    where: { id: studyId },
+  });
+}
