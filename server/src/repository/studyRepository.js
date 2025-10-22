@@ -14,3 +14,10 @@ export const getAllStudies = async () => {
 export const deleteStudy = async (id) => {
   return await prisma.study.delete({ where: { id } });
 };
+
+export const addPoints = async (id, amount) => {
+  return await prisma.study.update({
+    where: { id },
+    data: { totalPoint: { increment: amount } },
+  });
+};

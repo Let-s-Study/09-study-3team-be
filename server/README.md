@@ -85,3 +85,4 @@ npm run prisma:generate# Prisma Client 생성
 npm run prisma:migrate # 스키마 → DB 반영
 npm run prisma:studio  # Prisma Studio UI
 
+

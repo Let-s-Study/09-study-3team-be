@@ -89,3 +89,41 @@ export const deleteStudy = async (req, res) => {
     });
   }
 };
+
+export const addStudyPoints = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { amount } = req.body;
+
+    if (!amount || isNaN(amount)) {
+      return res.status(400).json({
+        success: false,
+        message: '추가할 포인트(amount)가 필요합니다.',
+      });
+    }
+
+    const updatedStudy = await StudyRepo.addPoints(id, Number(amount));
+    return res.status(200).json({
+      success: true,
+      message: `+${amount} 포인트 추가 완료`,
+      data: updatedStudy,
+    });
+  } catch (error) {
+    console.error('addStudyPoints Error:', error);
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === 'P2025'
+    ) {
+      return res
+        .status(404)
+        .json({ success: false, message: '존재하지 않는 스터디입니다.' });
+    }
+    return res
+      .status(500)
+      .json({
+        success: false,
+        message: '포인트 추가 실패',
+        error: error.message,
+      });
+  }
+};

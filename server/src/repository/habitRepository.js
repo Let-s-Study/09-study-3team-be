@@ -1,4 +1,4 @@
-import { prisma } from '../db/prismaClient.js';
+import prisma from '../db/prismaClient.js';
 
 //습관 생성
 export const createHabit = async (data) => {
@@ -9,7 +9,11 @@ export const createHabit = async (data) => {
 export const getHabitsByStudyId = async (studyId) => {
   return await prisma.habit.findMany({
     where: { studyId },
-    include: { habitRecords: true },
+    include: {
+      habitRecords: {
+        select: { id: true, day: true },
+      },
+    },
     orderBy: { createdAt: 'desc' },
   });
 };
