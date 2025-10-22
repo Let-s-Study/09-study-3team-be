@@ -85,4 +85,48 @@ npm run prisma:generate# Prisma Client 생성
 npm run prisma:migrate # 스키마 → DB 반영
 npm run prisma:studio  # Prisma Studio UI
 
+```
+server
+├─ .prettierrc
+├─ README.md
+├─ eslint.config.js
+├─ package-lock.json
+├─ package.json
+├─ prisma
+│  ├─ migrations
+│  │  ├─ 20251021174432_update_schema
+│  │  │  └─ migration.sql
+│  │  └─ migration_lock.toml
+│  └─ schema.prisma
+├─ server.js
+├─ src
+│  ├─ common
+│  │  ├─ Errors
+│  │  └─ constants
+│  ├─ config
+│  ├─ controllers
+│  │  ├─ emojiController.js
+│  │  ├─ habitController.js
+│  │  ├─ habitRecordController.js
+│  │  └─ studyController.js
+│  ├─ db
+│  │  └─ prismaClient.js
+│  ├─ middlewares
+│  ├─ repository
+│  │  ├─ emojiRepository.js
+│  │  ├─ habitRecordRepository.js
+│  │  ├─ habitRepository.js
+│  │  └─ studyRepository.js
+│  ├─ routes
+│  │  ├─ emojiRoute.js
+│  │  ├─ habitRecordRoute.js
+│  │  ├─ habitRoute.js
+│  │  └─ studyRoute.js
+│  ├─ utils
+│  └─ validators
+└─ vscode
+   └─ settings.json
+
+```
+
 
