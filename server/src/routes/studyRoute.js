@@ -13,5 +13,5 @@ router.post('/', createStudy);
 router.get('/', getAllStudies);
 router.delete('/:id', deleteStudy);
 router.patch('/:id/points', addStudyPoints);
-router.post('/detail/:studyId/verify', handleVerifyPassword);
+router.post('/studies/:studyId/verify', handleVerifyPassword);
 export default router;
