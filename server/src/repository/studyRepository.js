@@ -26,4 +26,4 @@ export const findStudyById = async (studyId) => {
   return prisma.study.findUnique({
     where: { id: studyId },
   });
-}
+};

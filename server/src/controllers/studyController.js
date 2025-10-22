@@ -1,7 +1,7 @@
 import * as StudyRepo from '../repository/studyRepository.js';
 import { Prisma } from '@prisma/client';
 import bcrypt from 'bcrypt';
-import jwt from 'jsonbtoken';
+import jwt from 'jsonwebtoken';
 
 export const createStudy = async (req, res) => {
   try {
@@ -13,12 +13,14 @@ export const createStudy = async (req, res) => {
         message: '필수 항목(nickname, title, password)이 누락되었습니다.',
       });
     }
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
 
     const newStudy = await StudyRepo.createStudy({
       nickname: nickname.trim(),
       title: title.trim(),
       description: description ? description.trim() : null,
-      password,
+      password: hashedPassword,
       background,
     });
 
@@ -120,26 +122,31 @@ export const addStudyPoints = async (req, res) => {
         .status(404)
         .json({ success: false, message: '존재하지 않는 스터디입니다.' });
     }
-    return res
-      .status(500)
-      .json({
-        success: false,
-        message: '포인트 추가 실패',
-        error: error.message,
-      });
+    return res.status(500).json({
+      success: false,
+      message: '포인트 추가 실패',
+      error: error.message,
+    });
   }
 };
 
-export const verifyPw = async (req,res,next) => {
+export const verifyPw = async (req, res, next) => {
+  // 비밀번호 체크
   try {
-    const {studyId} = req.params;
-    const {password} = req.body;
-    const isPasswordCorrect = await bcrypt.compare(password,studyId.password);
-    if(!isPasswordCorrect){
-      return res.status(401).json({message: '비밀번호가 일치하지 않습니다.'});
+    const { studyId } = req.params;
+    const { password } = req.body;
+    const study = await StudyRepo.findStudyById(studyId);
+    if (!study) {
+      return res.status(404).json({ message: '스터디 내에서 시도해주세요' });
     }
-    return res.status(200).json({message: '로그인 성공'});
-  } catch(error){
+    const isPasswordCorrect = await bcrypt.compare(password, study.password);
+    if (!isPasswordCorrect) {
+      return res.status(401).json({ message: '비밀번호가 일치하지 않습니다.' });
+    }
+
+    const token = jwt.sign({ studyId: study.id }, 'YOUR_SECRET_KEY');
+    return res.status(200).json({ message: '인증 완료', token });
+  } catch (error) {
     next(error);
   }
-}
+};
