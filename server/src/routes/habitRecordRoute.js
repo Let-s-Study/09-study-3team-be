@@ -4,11 +4,12 @@ import {
   getWeeklyRecords,
   deleteRecord,
 } from '../controllers/habitRecordController.js';
+import { authMiddleware } from '../middlewares/auth.middleware.js';
 
 const router = express.Router();
 
-router.post('/', createHabitRecord);
-router.get('/:habitId/week', getWeeklyRecords);
-router.delete('/:id', deleteRecord);
+router.post('/', authMiddleware, createHabitRecord);
+router.get('/:habitId/week', authMiddleware, getWeeklyRecords);
+router.delete('/:id', authMiddleware, deleteRecord);
 
 export default router;

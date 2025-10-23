@@ -68,6 +68,16 @@ export const getAllStudies = async (req, res) => {
 export const deleteStudy = async (req, res) => {
   try {
     const { id } = req.params;
+    const authStudy = req.study;
+
+    if (id !== authStudy.id) {
+      //삭제하려는 스터디 id와 인증(로그인)된 id가 다르면
+      return res.status(403).json({
+        success: false,
+        message: '자신의 스터디가 아닙니다',
+      });
+    }
+
     await StudyRepo.deleteStudy(id);
 
     return res.status(200).json({
@@ -97,6 +107,13 @@ export const deleteStudy = async (req, res) => {
 export const addStudyPoints = async (req, res) => {
   try {
     const { id } = req.params;
+    const { id: authStudyId } = req.study;
+    if (id !== authStudyId) {
+      return res.status(403).json({
+        success: false,
+        message: '로그인된 스터디가 아닙니다',
+      });
+    }
     const { amount } = req.body;
 
     if (!amount || isNaN(amount)) {
@@ -137,20 +154,22 @@ export const verifyPw = async (req, res, next) => {
     const { password } = req.body;
     const study = await StudyRepo.findStudyById(studyId);
     if (!study) {
-      return res.status(404).json({ message: '스터디 내에서 시도해주세요' });
+      return res.status(404).json({ message: '로그인된 스터디가 아닙니다' });
     }
     const isPasswordCorrect = await bcrypt.compare(password, study.password);
     if (!isPasswordCorrect) {
       return res.status(401).json({ message: '비밀번호가 일치하지 않습니다.' });
     }
 
-    const token = jwt.sign({ studyId: study.id }, 'YOUR_SECRET_KEY');
+    const token = jwt.sign({ studyId: study.id }, process.env.JWT_SECRET, {
+      expiresIn: '12h',
+    });
     res.cookie('accessToken', token, {
       httpOnly: true,
       secure: true,
-      maxAge: 1000 * 60 * 60, //쿠키 유효시간(1시간)
+      maxAge: 12000 * 60 * 60, //쿠키 유효시간(12시간)
     });
-    return res.status(200).json({ message: '인증 완료' });
+    return res.status(200).json({ message: '로그인 완료' });
   } catch (error) {
     next(error);
   }

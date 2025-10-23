@@ -7,7 +7,7 @@ export const authMiddleware = async (req, res, next) => {
     if (!accessToken) {
       throw new Error('로그인 정보가 없습니다.');
     }
-    const payload = jwt.verify(accessToken, 'YOUR_SECRET_KEY');
+    const payload = jwt.verify(accessToken, 'process.env.JWT_SECRET');
     const study = await prisma.study.findUnique({
       where: { id: payload.studyId },
     });

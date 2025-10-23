@@ -12,8 +12,11 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-
-app.use(cors());
+const corsOption = {
+  origin: 'http://localhost:3000', //fe 주소
+  credentials: true,
+};
+app.use(cors(corsOption));
 app.use(express.json());
 app.use(cookieParser());
 

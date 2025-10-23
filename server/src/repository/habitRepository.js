@@ -32,3 +32,8 @@ export const deleteHabit = async (id) => {
     where: { id },
   });
 };
+export const findHabitById = async (id) => {
+  return prisma.habit.findUnique({
+    where: { id },
+  });
+};
