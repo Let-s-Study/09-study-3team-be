@@ -46,7 +46,8 @@ model Habit {
 model HabitRecord {
   id      String   @id @default(cuid())
   habitId String
-  day     DateTime
-
+  day     DateTime @db.Date   
   habit Habit @relation(fields: [habitId], references: [id], onDelete: Cascade)
+  @@unique([habitId, day])    
+  @@index([habitId, day])
 }
