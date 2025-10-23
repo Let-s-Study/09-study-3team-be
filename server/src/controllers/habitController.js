@@ -1,6 +1,6 @@
 import * as HabitRepo from '../repository/habitRepository.js';
-import { Prisma } from '@prisma/client';
-
+import pkg from '@prisma/client';
+const { Prisma } = pkg;
 //습관 생성
 export const createHabit = async (req, res) => {
   try {
