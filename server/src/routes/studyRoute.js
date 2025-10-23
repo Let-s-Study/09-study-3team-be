@@ -12,7 +12,7 @@ const router = express.Router();
 
 router.post('/', createStudy);
 router.get('/', getAllStudies);
+router.post('/:studyId/verify', verifyPw);
 router.delete('/:id', authMiddleware, deleteStudy);
 router.patch('/:id/points', authMiddleware, addStudyPoints);
-router.post('/:studyId/verify', verifyPw);
 export default router;

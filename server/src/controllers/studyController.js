@@ -1,7 +1,8 @@
 import * as StudyRepo from '../repository/studyRepository.js';
-import { Prisma } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import pkg from '@prisma/client';
+const { Prisma } = pkg;
 
 export const createStudy = async (req, res) => {
   try {
