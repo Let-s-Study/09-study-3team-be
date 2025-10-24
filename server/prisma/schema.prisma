@@ -1,3 +1,5 @@
+
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -8,15 +10,15 @@ datasource db {
 }
 
 model Study {
-  id          String   @id @default(cuid())
-  nickname    String
+  id          String  @id @default(cuid())
+  nickname    String 
   title       String
   description String
   password    String
   background  String
-  totalPoint  Int       @default(0)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  totalPoint  Int     @default(0) 
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   emojis Emoji[]
   habits Habit[]
@@ -46,7 +48,7 @@ model Habit {
 model HabitRecord {
   id      String   @id @default(cuid())
   habitId String
-  day     DateTime
+  day     DateTime 
 
   habit Habit @relation(fields: [habitId], references: [id], onDelete: Cascade)
 }
