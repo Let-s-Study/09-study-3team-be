@@ -6,19 +6,19 @@ const { Prisma } = pkg;
 
 export const createStudy = async (req, res) => {
   try {
-    const { nickname, title, description, password, background } = req.body;
+    const { nickName, title, description, password, backgroundId } = req.body;
 
-    if (!nickname || !title || !password) {
+    if (!nickName || !title || !password) {
       return res.status(400).json({
         success: false,
-        message: '필수 항목(nickname, title, password)이 누락되었습니다.',
+        message: '필수 항목(nickName, title, password)이 누락되었습니다.',
       });
     }
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
     const newStudy = await StudyRepo.createStudy({
-      nickname: nickname.trim(),
+      nickName: nickName.trim(),
       title: title.trim(),
       description: description ? description.trim() : null,
       password: hashedPassword,
