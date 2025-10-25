@@ -20,7 +20,7 @@ export const createHabit = async (req, res) => {
 
     return res.status(201).json({
       success: true,
-      message: '습관 생성 완료!',
+      message: '습관 생성 완료!',                    
       data: newHabit,
     });
   } catch (error) {
