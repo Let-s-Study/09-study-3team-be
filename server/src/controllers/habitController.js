@@ -1,6 +1,6 @@
 import * as HabitRepo from '../repository/habitRepository.js';
-import { Prisma } from '@prisma/client';
-
+import pkg from '@prisma/client';
+const { Prisma } = pkg;
 //습관 생성
 export const createHabit = async (req, res) => {
   try {
@@ -20,7 +20,7 @@ export const createHabit = async (req, res) => {
 
     return res.status(201).json({
       success: true,
-      message: '습관 생성 완료!',
+      message: '습관 생성 완료!',                    
       data: newHabit,
     });
   } catch (error) {
@@ -50,7 +50,7 @@ export const getHabitsByStudyId = async (req, res) => {
     if (!studyId) {
       return res.status(400).json({
         success: false,
-        message: 'studyId가 필요하다!',
+        message: 'studyId가 필요합니다!',
       });
     }
 
@@ -99,7 +99,7 @@ export const updateHabit = async (req, res) => {
     ) {
       return res.status(404).json({
         success: false,
-        message: '존재하지 않은 습관!',
+        message: '존재하지 않은 습관입니다!',
       });
     }
     console.error('updateHabit Error', error);
@@ -127,13 +127,13 @@ export const deleteHabit = async (req, res) => {
       if (error.code === 'P2025') {
         return res.status(404).json({
           success: false,
-          message: '존재하지 않는 습관입니다.',
+          message: '존재하지 않는 습관입니다!',
         });
       }
       if (error.code === 'P2003') {
         return res.status(409).json({
           success: false,
-          message: '먼저 해당 습관의 기록을 삭제해야합니다.',
+          message: '먼저 해당 습관의 기록을 삭제해야합니다!',
         });
       }
     }

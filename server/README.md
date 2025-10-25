@@ -1,4 +1,3 @@
-
 # 🌳 Study Forest — Backend (Express + Prisma + PostgreSQL)
 
 간단한 API 서버(Express) + ORM(Prisma) + DB(PostgreSQL) 세팅입니다.  
@@ -7,6 +6,7 @@ Prisma Studio/DBeaver로 데이터 확인 가능합니다.
 ---
 
 ## 📦 Tech
+
 - Node.js, Express, CORS, dotenv
 - Prisma ORM, PostgreSQL
 - ESLint(ESM), Prettier, Nodemon
@@ -16,10 +16,10 @@ Prisma Studio/DBeaver로 데이터 확인 가능합니다.
 ## 🗂 구조
 
 server/
-├ prisma/            # schema.prisma, migrations
+├ prisma/ # schema.prisma, migrations
 ├ src/
 │ └── db/
-│     └── prismaClient.js
+│ └── prismaClient.js
 ├ .vscode/
 │ └── settings.json
 ├ .env.example
@@ -32,7 +32,9 @@ server/
 ---
 
 ## 🔑 환경변수 (.env)
+
 `.env.example` 복사 후 값 채우기:
+
 ```bash
 cp .env.example .env
 
@@ -41,6 +43,11 @@ cp .env.example .env
 PORT=4000
 DATABASE_URL="postgresql://<USER>:<PASSWORD>@<HOST>:5432/forest?schema=public"
 NODE_ENV=development
+
+
+JWT_SECRET="this-is-a-super-secret-key-for-access-token"
+# node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
+# 입력해서 나오는 난수 복붙
 
 
 ⸻
@@ -95,37 +102,37 @@ server/
 ├─ package-lock.json
 ├─ package.json
 ├─ prisma
-│  ├─ migrations
-│  │  ├─ 20251021174432_update_schema
-│  │  │  └─ migration.sql
-│  │  └─ migration_lock.toml
-│  └─ schema.prisma
+│ ├─ migrations
+│ │ ├─ 20251021174432_update_schema
+│ │ │ └─ migration.sql
+│ │ └─ migration_lock.toml
+│ └─ schema.prisma
 ├─ server.js
 ├─ src
-│  ├─ common
-│  │  ├─ Errors
-│  │  └─ constants
-│  ├─ config
-│  ├─ controllers
-│  │  ├─ emojiController.js
-│  │  ├─ habitController.js
-│  │  ├─ habitRecordController.js
-│  │  └─ studyController.js
-│  ├─ db
-│  │  └─ prismaClient.js
-│  ├─ middlewares
-│  ├─ repository
-│  │  ├─ emojiRepository.js
-│  │  ├─ habitRecordRepository.js
-│  │  ├─ habitRepository.js
-│  │  └─ studyRepository.js
-│  ├─ routes
-│  │  ├─ emojiRoute.js
-│  │  ├─ habitRecordRoute.js
-│  │  ├─ habitRoute.js
-│  │  └─ studyRoute.js
-│  ├─ utils
-│  └─ validators
+│ ├─ common
+│ │ ├─ Errors
+│ │ └─ constants
+│ ├─ config
+│ ├─ controllers
+│ │ ├─ emojiController.js
+│ │ ├─ habitController.js
+│ │ ├─ habitRecordController.js
+│ │ └─ studyController.js
+│ ├─ db
+│ │ └─ prismaClient.js
+│ ├─ middlewares
+│ ├─ repository
+│ │ ├─ emojiRepository.js
+│ │ ├─ habitRecordRepository.js
+│ │ ├─ habitRepository.js
+│ │ └─ studyRepository.js
+│ ├─ routes
+│ │ ├─ emojiRoute.js
+│ │ ├─ habitRecordRoute.js
+│ │ ├─ habitRoute.js
+│ │ └─ studyRoute.js
+│ ├─ utils
+│ └─ validators
 └─ vscode
-   └─ settings.json
+└─ settings.json
 

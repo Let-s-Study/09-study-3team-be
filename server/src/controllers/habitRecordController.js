@@ -1,16 +1,33 @@
 import * as RecordRepo from '../repository/habitRecordRepository.js';
-import { Prisma } from '@prisma/client';
+import * as HabitRepo from '../repository/habitRepository.js';
 import { startOfWeek, endOfWeek } from 'date-fns';
+import pkg from '@prisma/client';
+const { Prisma } = pkg;
 
-// 오늘의 습관 기록 생성
-export const createHabitRecord = async (req, res) => {
+// 기록 생성
+export const createHabitRecord = async (req, res, next) => {
   try {
     const { habitId } = req.body;
+    const { id: authorizedId } = req.study;
 
     if (!habitId) {
       return res
         .status(400)
         .json({ success: false, message: 'habitId가 필요합니다.' });
+    }
+
+    const habit = await HabitRepo.findHabitById(habitId);
+    if (!habit) {
+      return res.status(404).json({
+        success: false,
+        message: '존재하지 않는 습관입니다.',
+      });
+    }
+    if (habit.studyId !== authorizedId) {
+      return res.status(403).json({
+        success: false,
+        message: '자신의 습관에만 기록을 추가할 수 있습니다.',
+      });
     }
 
     const newRecord = await RecordRepo.createHabitRecord({
@@ -24,33 +41,42 @@ export const createHabitRecord = async (req, res) => {
       data: newRecord,
     });
   } catch (error) {
-    console.error(' createHabitRecord Error:', error);
     if (
       error instanceof Prisma.PrismaClientKnownRequestError &&
-      error.code === 'P2003'
+      error.code === 'P2002'
     ) {
-      return res.status(400).json({
+      return res.status(409).json({
         success: false,
-        message: '유효하지 않은 habitId입니다.',
+        message: '오늘은 이미 기록되었습니다.',
       });
     }
-    return res.status(500).json({
-      success: false,
-      message: '습관 기록 추가 실패',
-      error: error.message,
-    });
+    next(error);
   }
 };
 
-// 특정 습관의 이번 주 기록 조회
-export const getWeeklyRecords = async (req, res) => {
+export const getWeeklyRecords = async (req, res, next) => {
   try {
     const { habitId } = req.params;
+    const { id: authorizedId } = req.study;
 
     if (!habitId) {
       return res.status(400).json({
         success: false,
         message: 'habitId가 필요합니다.',
+      });
+    }
+
+    const habit = await HabitRepo.findHabitById(habitId);
+    if (!habit) {
+      return res.status(404).json({
+        success: false,
+        message: '존재하지 않는 습관입니다.',
+      });
+    }
+    if (habit.studyId !== authorizedId) {
+      return res.status(403).json({
+        success: false,
+        message: '자신의 습관 기록만 조회할 수 있습니다.',
       });
     }
 
@@ -68,25 +94,44 @@ export const getWeeklyRecords = async (req, res) => {
       data: weeklyRecords,
     });
   } catch (error) {
-    console.error('getWeeklyRecords Error:', error);
-    return res.status(500).json({
-      success: false,
-      message: '주간 기록 조회 실패',
-      error: error.message,
-    });
+    next(error);
   }
 };
 
 // 기록 삭제
-export const deleteRecord = async (req, res) => {
+export const deleteRecord = async (req, res, next) => {
   try {
     const { id } = req.params;
+    const { id: authorizedId } = req.study;
+    const record = await RecordRepo.findHabitRecordById(id);
+    if (!record) {
+      return res.status(404).json({
+        success: false,
+        message: '존재하지 않는 기록입니다.',
+      });
+    }
+    const habit = await HabitRepo.findHabitById(record.habitId);
+    if (habit.studyId !== authorizedId) {
+      return res.status(403).json({
+        success: false,
+        message: '자신의 기록만 삭제할 수 있습니다.',
+      });
+    }
+
     await RecordRepo.deleteRecord(id);
     return res
       .status(200)
       .json({ success: true, message: '기록이 삭제되었습니다.' });
   } catch (error) {
-    console.error(' deleteRecord Error:', error);
-    return res.status(500).json({ success: false, message: '기록 삭제 실패' });
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === 'P2025'
+    ) {
+      return res.status(404).json({
+        success: false,
+        message: '존재하지 않는 기록입니다.',
+      });
+    }
+    next(error);
   }
 };
