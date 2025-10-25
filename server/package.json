@@ -13,6 +13,7 @@
     "prisma:generate": "npx prisma generate",
     "prisma:studio": "npx prisma studio",
     "prepare": "prisma generate"
+    
   },
   "dependencies": {
     "@prisma/client": "^6.17.1",
