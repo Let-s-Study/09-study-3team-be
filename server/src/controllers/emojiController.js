@@ -1,7 +1,8 @@
 import * as EmojiRepo from '../repository/emojiRepository.js';
-import { Prisma } from '@prisma/client';
+import pkg from '@prisma/client';
+const { Prisma } = pkg;
 
-export const createEmoji = async (req, res) => {
+export const createEmoji = async (req, res, next) => {
   try {
     const { emoji, studyId } = req.body;
     if (!emoji || !studyId) {
@@ -16,22 +17,17 @@ export const createEmoji = async (req, res) => {
   } catch (error) {
     if (
       error instanceof Prisma.PrismaClientKnownRequestError &&
-      error.code === 'P2003'
+      error.code === 'P2003' // studyId가 유효하지 않음
     ) {
       return res
         .status(400)
-        .json({ success: false, message: '유효하지 하지 않은 studyId !!' });
+        .json({ success: false, message: '유효하지 않은 studyId 입니다.' });
     }
-    console.error('createEmoji Error ', error);
-    return res.status(500).json({
-      success: false,
-      message: '이모지 생성 실패 ',
-      error: error.message,
-    });
+    next(error);
   }
 };
 
-export const getEmojisByStudyId = async (req, res) => {
+export const getEmojisByStudyId = async (req, res, next) => {
   try {
     const { studyId } = req.params;
     if (!studyId)
@@ -41,16 +37,11 @@ export const getEmojisByStudyId = async (req, res) => {
     const list = await EmojiRepo.getEmojisByStudyId(studyId);
     return res.status(200).json({ success: true, data: list });
   } catch (error) {
-    console.error('getEmojisByStudyId Error', error);
-    return res.status(500).json({
-      success: false,
-      message: '이모지 조회실패',
-      error: error.message,
-    });
+    next(error);
   }
 };
 
-export const incrementEmoji = async (req, res) => {
+export const incrementEmoji = async (req, res, next) => {
   try {
     const { id } = req.params;
     const updated = await EmojiRepo.incrementEmoji(id);
@@ -66,36 +57,43 @@ export const incrementEmoji = async (req, res) => {
         .status(404)
         .json({ success: false, message: '존재하지 않는 이모지입니다.' });
     }
-    console.error(' incrementEmoji Error:', error);
-    return res.status(500).json({
-      success: false,
-      message: '이모지 증가 실패',
-      error: error.message,
-    });
+    next(error);
   }
 };
 
-export const deleteEmoji = async (req, res) => {
+// 삭제는 로그인
+export const deleteEmoji = async (req, res, next) => {
   try {
     const { id } = req.params;
+    const { id: loggedInStudyId } = req.study;
+
+    const emoji = await EmojiRepo.findEmojiById(id);
+    if (!emoji) {
+      return res.status(404).json({
+        success: false,
+        message: '존재하지 않는 이모지입니다.',
+      });
+    }
+    if (emoji.studyId !== loggedInStudyId) {
+      return res.status(403).json({
+        success: false,
+        message: '자신의 스터디 이모지만 삭제할 수 있습니다.',
+      });
+    }
+
     await EmojiRepo.deleteEmoji(id);
     return res
       .status(200)
       .json({ success: true, message: '이모지 삭제 완료!!' });
   } catch (error) {
     if (
-      error instanceof Prisma.PrismaClientInitializationError &&
+      error instanceof Prisma.PrismaClientKnownRequestError &&
       error.code === 'P2025'
     ) {
       return res
-        .status(400)
+        .status(404)
         .json({ success: false, message: '존재하지 않는 이모지입니다!!' });
     }
-    console.error('deleteEmoji Error', error);
-    return res.status(500).json({
-      success: false,
-      message: '이모지 삭제 실패',
-      error: error.message,
-    });
+    next(error);
   }
 };

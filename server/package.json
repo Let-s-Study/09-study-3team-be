@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "type": "module",
-  "main": "server.js",
+  "main": "sserver.mjs",
   "scripts": {
-    "dev": "nodemon server.js",
-    "start": "node server.js",
+    "dev": "nodemon server.mjs",
+    "start": "node server.mjs",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "prisma:migrate": "npx prisma migrate dev",
@@ -33,6 +33,6 @@
     "globals": "^16.4.0",
     "nodemon": "^3.1.10",
     "prettier": "^3.6.2",
-    "prisma": "^6.17.1"
+    "prisma": "^5.0.0"
   }
 }
