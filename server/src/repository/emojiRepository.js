@@ -21,3 +21,9 @@ export const incrementEmoji = async (id) => {
 export const deleteEmoji = async (id) => {
   return prisma.emoji.delete({ where: { id } });
 };
+
+export const findEmojiById = async (id) => {
+  return prisma.emoji.findUnique({
+    where: { id },
+  });
+};
