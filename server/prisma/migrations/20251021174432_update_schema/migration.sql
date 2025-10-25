@@ -1,11 +1,11 @@
 -- CreateTable
 CREATE TABLE "Study" (
     "id" TEXT NOT NULL,
-    "nickname" TEXT NOT NULL,
+    "nickName" TEXT NOT NULL,
     "title" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "password" TEXT NOT NULL,
-    "background" TEXT NOT NULL,
+    "backgroundId" TEXT NOT NULL,
     "totalPoint" INTEGER NOT NULL DEFAULT 0,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
