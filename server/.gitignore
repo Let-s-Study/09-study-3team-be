@@ -8,3 +8,5 @@ yarn-debug.log*
 yarn-error.log*
 .eslintcache
 .gitmessage.txt
+package.json
+server.mjs
