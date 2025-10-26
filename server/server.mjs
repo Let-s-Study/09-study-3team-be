@@ -11,7 +11,7 @@ import emojiRoute from './src/routes/emojiRoute.js';
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 const corsOption = {
   origin: 'http://localhost:5173', //fe 주소
   credentials: true,
