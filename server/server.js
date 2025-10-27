@@ -11,23 +11,26 @@ import emojiRoute from './src/routes/emojiRoute.js';
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = Number(process.env.PORT) || 4000;
+
 const corsOption = {
-  origin: 'http://localhost:5173', //fe 주소
+  origin: 'http://localhost:5173',
   credentials: true,
 };
 app.use(cors(corsOption));
+
+app.use(function (req, res, next) {
+  if (req.method === 'OPTIONS') return res.sendStatus(204);
+  next();
+});
 app.use(express.json());
 app.use(cookieParser());
 
-app.get('/api/v1/health', (req, res) => {
+app.get('/api/v1/health', function (req, res) {
   res.status(200).json({
     success: true,
     message: ' Server is healthy!',
-    data: {
-      status: 'ok',
-      timestamp: new Date().toISOString(),
-    },
+    data: { status: 'ok', timestamp: new Date().toISOString() },
   });
 });
 
@@ -36,23 +39,16 @@ app.use('/api/habits', habitRoute);
 app.use('/api/habit-records', habitRecordRoute);
 app.use('/api/emojis', emojiRoute);
 
-app.use((err, req, res, next) => {
-  console.error(err); // 서버 로그에 에러 기록
-
-  // Status를 지정한 에러 처리
-  if (err.status) {
-    return res.status(err.status).json({
-      success: false,
-      message: err.message,
-    });
+app.use(function (err, req, res, next) {
+  console.error(err);
+  if (err && err.status) {
+    return res
+      .status(err.status)
+      .json({ success: false, message: err.message });
   }
-
-  return res.status(500).json({
-    success: false,
-    message: '서버 오류 발생',
-  });
+  return res.status(500).json({ success: false, message: '서버 오류 발생' });
 });
 
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+app.listen(PORT, function () {
+  console.log('🚀 Server running on port ' + PORT);
 });
