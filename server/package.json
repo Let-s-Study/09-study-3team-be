@@ -3,17 +3,16 @@
   "version": "1.0.0",
   "description": "",
   "type": "module",
-  "main": "sserver.mjs",
+  "main": "server.js",
   "scripts": {
-    "dev": "nodemon server.mjs",
-    "start": "node server.mjs",
+    "dev": "nodemon server.js",
+    "start": "node server.js",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "prisma:migrate": "npx prisma migrate dev",
     "prisma:generate": "npx prisma generate",
     "prisma:studio": "npx prisma studio",
     "prepare": "prisma generate"
-    
   },
   "dependencies": {
     "@prisma/client": "^6.17.1",
